@@ -64,23 +64,19 @@ function initPlots(){
 function updatePlots(selectedSubject){
     console.log(`Update Plots for: ${selectedSubject}`);
     d3.json(jsonData).then((data)=>{
-        //console.log(data.samples);
+        console.log(data.samples);
         for(x in data.samples){
             if(data.samples[x].id == selectedSubject){
                 //console.log(data.samples[x].otu_ids);
+                //console.log(data.samples[x]);
                 //Order OTUs and select Top10
                 let top10 = data.samples[x].sample_values.sort((firstNum, secondNum) => secondNum - firstNum);
-                let top10ids = data.samples[x].otu_ids.sort(function(a,b){return top10.indexOf(a)-top10.indexOf(b)});
-                let top10labels = data.samples[x].otu_labels.sort(function(a,b){return top10.indexOf(a)-top10.indexOf(b)});
                 top10 = top10.slice(0,10).reverse();
-                top10ids = top10ids.slice(0,10).reverse();
-                top10ids = top10ids.map(i => 'OTU-' + i);
-                top10labels = top10labels.slice(0,10).reverse();
-                //console.log(top10labels);
-                //Restyle Plot
-                Plotly.restyle("bar","x",[top10]);
-                Plotly.restyle("bar","y",[top10ids]);
-                Plotly.restyle("bar","text",[top10labels]);
+                console.log('top10')
+                //console.log(top10);
+                console.log(top10.map(x => x.data.samples[x].sample_values));
+                // Plotly.restyle("bar","x",[top10])
+                // Plotly.restyle("bar","y",[data.samples[x].otu_ids])
                 //console.log(data.samples[x].otu_ids);
             }
         }
