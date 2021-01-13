@@ -6,6 +6,7 @@ function fillDropdown(){
     d3.json(jsonData).then((data) => {
         console.log(data.names);
         let subjectNames = data.names;
+
         for(x in subjectNames){
             d3.select("#selDataset").append("option").text(subjectNames[x]);
         }
@@ -33,9 +34,24 @@ function fillDemographics(selectedSubject){
 }
 
 function optionChanged(selectedSubject){
-    console.log(selectedSubject);
+    console.log(`Selected subject: ${selectedSubject}`);
     fillDemographics(selectedSubject);
+    updatePlots(selectedSubject);
 }
 
-fillDropdown();
+function init(){
+    fillDropdown();
+    fillDemographics(940);
+    initPlots();
+}
+
+function initPlots(){
+    console.log('Init Plots');
+}
+
+function updatePlots(selectedSubject){
+    console.log(`Update Plots for: ${selectedSubject}`);
+}
+
+init();
 
