@@ -82,6 +82,30 @@ function initPlots(){
         title:'Bubble Chart'
     }
     Plotly.newPlot("bubble", chartData2, layout2);
+    //Init Gauge Plot
+    var data = [
+        {
+          value: 0,
+          title: { text: "Scrubs per Week" },
+          type: "indicator",
+          mode: "gauge+number",
+          gauge: {
+            axis: { range: [null, 9] },
+            steps: [
+              { range: [0, 1], color: "#F7F2EC"},
+              { range: [1, 2], color: "#F3F0E4" },
+              { range: [2, 3], color: "#E8E6C8" },
+              { range: [3, 4], color: "#E4E8AF" },
+              { range: [4, 5], color: "#D4E494" },
+              { range: [5, 6], color: "#B6CC8A" },
+              { range: [6, 7], color: "#86BF7F" },
+              { range: [7, 8], color: "#84BB8A" },
+              { range: [8, 9], color: "#7FB485" },
+            ],
+          }
+        }
+      ];
+      Plotly.newPlot('gauge', data);
 }
 
 function updatePlots(selectedSubject){
@@ -119,7 +143,13 @@ function updatePlots(selectedSubject){
                 Plotly.restyle("bubble","text",[text_bubble]);
             }
         }
-
+        for(y in data.metadata){
+            if(data.metadata[y].id == selectedSubject){
+                console.log(data.metadata[y].wfreq);
+                let wfreq = data.metadata[y].wfreq
+                Plotly.restyle("gauge","value",[wfreq])
+            }
+        }
     });
 }
 
