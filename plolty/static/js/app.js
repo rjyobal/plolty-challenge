@@ -1,7 +1,20 @@
+//Check if JS is properly connected
 console.log('Ok connected - app.js');
+//Get jsonData
 var jsonData = 'static/js/samples.json';
 
-//Get subject Names from JSON to fillout drop down
+/**
+ * Execute init functions
+ */
+function init(){
+    fillDropdown();
+    fillDemographics();
+    initPlots();
+}
+
+/**
+ * Get subject Names from JSON to fillout dropdown
+ */
 function fillDropdown(){
     d3.json(jsonData).then((data) => {
         //console.log(data.names);
@@ -14,8 +27,12 @@ function fillDropdown(){
     });
 }
 
-//Get demographics based on selectedSubject
+/**
+ * Get demographics based on selectedSubject
+ * @param {string} selectedSubject Selected subject from dropdown
+ */
 function fillDemographics(selectedSubject){
+    console.log(`Fill Demographics: ${selectedSubject}`);
     d3.select('#sample-metadata').html('');
     d3.json(jsonData).then((data) => {
         for (x in data.metadata){
@@ -35,23 +52,9 @@ function fillDemographics(selectedSubject){
     });
 }
 
-function optionChanged(selectedSubject){
-    console.log(`Selected subject: ${selectedSubject}`);
-    if(selectedSubject==='-Select Subject-'){
-        fillDemographics();
-        initPlots();
-    }else{
-        fillDemographics(selectedSubject);
-        updatePlots(selectedSubject);
-    }
-}
-
-function init(){
-    fillDropdown();
-    fillDemographics();
-    initPlots();
-}
-
+/**
+ * Initialize Plolty plots on refresh
+ */
 function initPlots(){
     console.log('Init Plots');
     //Init Bar Plot
@@ -108,6 +111,10 @@ function initPlots(){
       Plotly.newPlot('gauge', data);
 }
 
+/**
+ * Update plots based on seleceted subject
+ * @param {string} selectedSubject Selected subject from dropdown
+ */
 function updatePlots(selectedSubject){
     console.log(`Update Plots for: ${selectedSubject}`);
     d3.json(jsonData).then((data)=>{
@@ -136,16 +143,16 @@ function updatePlots(selectedSubject){
                 let y_bubble = data.samples[x].sample_values
                 let marker_bubble = {size:y_bubble, color:x_bubble}
                 let text_bubble = data.samples[x].otu_labels
-                //let marker_color = {color:x_bubble}
                 Plotly.restyle("bubble","x",[x_bubble]);
                 Plotly.restyle("bubble","y",[y_bubble]);
                 Plotly.restyle("bubble","marker",[marker_bubble]);
                 Plotly.restyle("bubble","text",[text_bubble]);
             }
         }
+        //BONUS - Restyle Gauge Plot
         for(y in data.metadata){
             if(data.metadata[y].id == selectedSubject){
-                console.log(data.metadata[y].wfreq);
+                //console.log(data.metadata[y].wfreq);
                 let wfreq = data.metadata[y].wfreq
                 Plotly.restyle("gauge","value",[wfreq])
             }
@@ -153,5 +160,21 @@ function updatePlots(selectedSubject){
     });
 }
 
+/**
+ * Refresh demographics and plots
+ * @param {string} selectedSubject Selected subject from dropdown
+ */
+function optionChanged(selectedSubject){
+    console.log(`Selected subject: ${selectedSubject}`);
+    if(selectedSubject==='-Select Subject-'){
+        fillDemographics();
+        initPlots();
+    }else{
+        fillDemographics(selectedSubject);
+        updatePlots(selectedSubject);
+    }
+}
+
+//Execute init fuctions
 init();
 
